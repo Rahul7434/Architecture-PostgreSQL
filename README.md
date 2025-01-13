@@ -1,8 +1,9 @@
-# architecture-PostgreSQL
+# Architecture-PostgreSQL
 ### Postgres Architecture is divided into Three Parts:- 
   - Postmaster
   - Background Proces
   - Memory
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 #### Postmaster:- 
 ```
   - Postmaster is the main or super Process in Postgresql.
@@ -68,63 +69,74 @@
   ```
            responsible for handling logical replication subscriptions and publications.
   ```
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+### Memory component:-  for Optimizing performance and handling data efficiently.
 
-### Memory component:-  
-for Optimizing performance and handling data efficiently.
-1.“Shared Buffer”:- it acts as a cache, Shared Buffer Stores recently accessed or modified pages. Allowing Postgresql to access data directly from Memory.
+- “Shared Buffer”:-
+  ```
+  	 it acts as a cache, Shared Buffer Stores recently accessed or modified pages. Allowing Postgresql to access data directly from Memory.
 	-It helps reduce disk i/o performance.
 	- To configure shared buffer use the Parameter:- “shared_buffers” located in the “postgresql. conf” file. By default size is 128MB.
 	-It uses the Last Recently Used (LRU) algorithm to manage buffer. 
-	-changes made to data In the shared buffer are not immediately written to disk. If the page size is full then the “bg_writer” process flushes the dirty pages to the disk. (by default page size is 8kb).
-------------------------------------------------------------------------------------------------------------------------------------------
-	2.“Wal Buffer”:- When a transaction make changes to the database, these changes are first written to the wal buffers before they are stored on disk.
+	-changes made to data In the shared buffer are not immediately written to disk. If the page size is full then the “bg_writer” process flushes the dirty pages to 
+       the disk. (by default page size is 8kb).
+  ```
+- “Wal Buffer”:-
+  ```
+    	When a transaction make changes to the database, these changes are first written to the wal buffers before they are stored on disk.
 	-when the transactions is committed or the buffer is full then the “wal_writer” background process will flush all data into the wal segment file.
 	-crash or system failure, the wal files are used to recover committed transactions that may not have been fully written to the main data file.
 	-Default size is 16MB of “wal_buffer” We can Adjust this parameter in the “PostgreSQL.conf” to optimize performance based on workload.
-------------------------------------------------------------------------------------------------------------------------------------------
-3.“tem_buffer”:-  
--temp_buffers is used for temporary tables created by a session. 
--It defines the amount of memory allocated for temporary table data.
+  ```
+- “tem_buffer”:-
+  ```
+	-temp_buffers is used for temporary tables created by a session. 
+	-It defines the amount of memory allocated for temporary table data.
 	-Workflow:-
-    2. When a session creates a temporary table, PostgreSQL allocates memory from temp_buffers.
-    3. Data written to temporary tables first goes into these buffers.
-    4. If temp_buffers is exhausted, the data spills to disk (in pgsql_tmp).
-Session Start → Create Temp Table → Allocate Memory (temp_buffers) → Buffer Data → Release on Session End.
+    	2. When a session creates a temporary table, PostgreSQL allocates memory from temp_buffers.
+    	3. Data written to temporary tables first goes into these buffers.
+    	4. If temp_buffers is exhausted, the data spills to disk (in pgsql_tmp).
+	Session Start → Create Temp Table → Allocate Memory (temp_buffers) → Buffer Data → Release on Session End.
 
-Example:-
-[SET temp_buffers = '8MB'; -- Configures temp_buffers to 8MB for the session 
-CREATE TEMP TABLE temp_data AS SELECT * FROM large_table; -- Creates a temporary table 
-INSERT INTO temp_data SELECT * FROM another_large_table; -- Inserts into the temp table, using temp_buffers]
---------------------------------------------------------------------------------------------------------------------------------
-  	4. work_mem
-Description:
-    • It defines the amount of memory allocated per operation. Multiple operations within a
-- During query execution, PostgreSQL allocates memory for each sorting or hashing operation according to the work_mem setting.
--Each session and operation can have its own work_mem, so the total memory usage can multiply quickly.
--We can set session level, database level size of work_mem to manage query performance.
--By default, it's size is 4MB. If any query Consumes a high CPU because query is large we can set work_mem size. 
-Example:
-    • Consider a query that involves sorting and joining:
-SET work_mem = '16MB';  -- Set work_mem to 16MB
-SELECT * FROM orders ORDER BY order_date;  -- Sorting operation
-    • The work_mem setting of 16MB is used for sorting orders by order_date. If the data size exceeds 16MB, the extra data will spill to the disk, impacting performance.
----------------------------------------------------------------------------------------------------------------------
-3. maintenance_work_mem
-Description:
-    • maintenance_work_mem is used for maintenance tasks such as VACUUM, CREATE INDEX, REINDEX, and ALTER TABLE.
-Workflow:
-    5. When maintenance tasks like indexing or vacuuming are executed, PostgreSQL allocates memory according to maintenance_work_mem.
-    6. Efficient use of this memory helps reduce disk I/O and speeds up these operations.
-    7. Maintenance tasks running concurrently will each get their allocation from maintenance_work_mem.
-Example:
-    • During an indexing operation:
-SET maintenance_work_mem = '64MB';  -- Set maintenance_work_mem to 64MB
-CREATE INDEX idx_order_date ON orders(order_date);  -- Index creation
-
-
-
-
-Query Flow:- 
+  	-----------------------------------------------------------------------------------------------------------
+  	Example:-
+	[SET temp_buffers = '8MB'; -- Configures temp_buffers to 8MB for the session 
+	CREATE TEMP TABLE temp_data AS SELECT * FROM large_table; -- Creates a temporary table 
+	INSERT INTO temp_data SELECT * FROM another_large_table; -- Inserts into the temp table, using temp_buffers]
+  	
+  ```
+- work_mem
+  ```
+	Description:
+    	• It defines the amount of memory allocated per operation. Multiple operations within a
+	- During query execution, PostgreSQL allocates memory for each sorting or hashing operation according to the work_mem setting.
+	-Each session and operation can have its own work_mem, so the total memory usage can multiply quickly.
+	-We can set session level, database level size of work_mem to manage query performance.
+	-By default, it's size is 4MB. If any query Consumes a high CPU because query is large we can set work_mem size.
+	-----------------------------------------------------------------------------------------------------------------------------------------
+	Example:
+    	• Consider a query that involves sorting and joining:
+	SET work_mem = '16MB';  -- Set work_mem to 16MB
+	SELECT * FROM orders ORDER BY order_date;  -- Sorting operation
+   	• The work_mem setting of 16MB is used for sorting orders by order_date. If the data size exceeds 16MB, the extra data will spill to the disk, impacting 		performance.
+  ```
+- maintenance_work_mem
+  ```
+	Description:
+    		• maintenance_work_mem is used for maintenance tasks such as VACUUM, CREATE INDEX, REINDEX, and ALTER TABLE.
+	Workflow:
+    	5. When maintenance tasks like indexing or vacuuming are executed, PostgreSQL allocates memory according to maintenance_work_mem.
+    	6. Efficient use of this memory helps reduce disk I/O and speeds up these operations.
+    	7. Maintenance tasks running concurrently will each get their allocation from maintenance_work_mem.
+  	------------------------------------------------------------------------------------------------------------
+	Example:
+    	• During an indexing operation:
+	SET maintenance_work_mem = '64MB';  -- Set maintenance_work_mem to 64MB
+	CREATE INDEX idx_order_date ON orders(order_date);  -- Index creation
+  ```
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+### Query Flow:-
+```
 In PostgreSQL, a query flow for a read operation follows a structured process. Here's an overview of the query flow, breaking down the steps that a typical SELECT query goes through in PostgreSQL.
 1. Client Request (Query Parsing)
     • Step 1: The client sends a SQL query (e.g., SELECT * FROM users WHERE age > 30;) to the PostgreSQL server.
@@ -153,8 +165,9 @@ In PostgreSQL, a query flow for a read operation follows a structured process. H
     • If the data is large, PostgreSQL streams it in chunks to the client.
 8. The Client Receives Data
     • The client receives the data and processes it accordingly (displaying it, saving it, or using it for further analysis).
-
-Summary of the PostgreSQL Read Query Flow
+```
+##### Summary of the PostgreSQL Read Query Flow
+```
     8. Client Request: Query is sent to the server.
     9. Parsing: Syntax check and creation of a parse tree.
     10. Query Rewrite: Modifications are applied if views or rules are involved.
@@ -163,3 +176,4 @@ Summary of the PostgreSQL Read Query Flow
     13. Buffer Manager/Cache: Data is retrieved from memory or disk.
     14. Disk I/O: Data is fetched from disk if necessary.
     15. Results: Data is sent back to the client.
+```
