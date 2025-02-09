@@ -10,17 +10,23 @@
   - Responsible for handling Client connections & Background Processes.
   - It listens for new connections on the Configured IP address & TCP Port (default 5432 port) to the “Listen_address & port” parameter In the Postgresql. conf file to establish communication between the client & Database.
   - When the client sends a request, the Postmaster process accepts the request and checks the “pg_hba.conf” file for Authentication (The authentication method selected depends on the configuration in pg_hba.conf.) Like method, password, IP, Port.
-  - Process checks if the client IP Address, Username, Database, and Password Match will establish a connection otherwise it will deny the request. 
+  - Process checks if the client IP Address, Username, Database, and Password Match will establish a connectio n otherwise it will deny the request. 
   - One Connection is established then Postmaster will Start all Background Processes for each Connection.
 ```
 ### Background Process:- [bg_writer , wal_writer, checkpointer, Archiever, stat_collector, loggin_collector,  autovacuum_launcher, logical_replication_launcher.]
 - BG Writer:- 
   ```
   Responsible for the performance of i/o operations. It continuously writes Dirty Pages from shared buffer to the Disk file.
+  background writer periodically scans the shared buffer based on  "bgwriter_delay" parameter value and writes dirty pages to disk.
+  Also during checkpoint intervals.
+  bgwriter_delay (default 200ms) :- will scan each 200ms for dirty buffer.
+  bgwriter_lru_maxpages (100 default):-  maximum numbers of dirty buffers written in each background write cycle.
+  bgwriter_lru_multiplier (default 2.0) :-  (recent freed buffer * bgwritter_lru_multiplier) if recent 50 pages are written then next time it will write 100 pages (50 * 2.0).
+  [If bgwriter_lru_maxpage=50 even though bgwriter wants to write 100 pages, it will only write 50.]
   ```
 - Wal Writer:- 
     ```
-    It flushes regularly modified transaction in to the walfile.\
+    It flushes regularly modified transaction in to the walfile.
     (flushes the log from wal buffer to disk file if the walbuffer full, Transaction commited, time interval).
     ```
 - CheckPointer:- 
