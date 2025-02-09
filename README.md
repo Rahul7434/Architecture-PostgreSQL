@@ -1,4 +1,4 @@
-# Architecture-PostgreSQL
+ # Architecture-PostgreSQL
 ### Postgres Architecture is divided into Three Parts:- 
   - Postmaster
   - Background Proces
@@ -116,6 +116,7 @@
 	-It uses the Last Recently Used (LRU) algorithm to manage buffer. 
 	-changes made to data In the shared buffer are not immediately written to disk. If the page size is full then the “bg_writer” process flushes the dirty pages to 
        the disk. (by default page size is 8kb).
+  {shared buffer size need 25% of the total memory}
   ```
 - “Wal Buffer”:-
   ```
@@ -123,6 +124,7 @@
 	-when the transactions is committed or the buffer is full then the “wal_writer” background process will flush all data into the wal segment file.
 	-crash or system failure, the wal files are used to recover committed transactions that may not have been fully written to the main data file.
 	-Default size is 16MB of “wal_buffer” We can Adjust this parameter in the “PostgreSQL.conf” to optimize performance based on workload.
+   {wal buffer size need to be 3% of shared buffer}.
   ```
 - “tem_buffer”:-
   ```
@@ -154,7 +156,8 @@
     	• Consider a query that involves sorting and joining:
 	SET work_mem = '16MB';  -- Set work_mem to 16MB
 	SELECT * FROM orders ORDER BY order_date;  -- Sorting operation
-   	• The work_mem setting of 16MB is used for sorting orders by order_date. If the data size exceeds 16MB, the extra data will spill to the disk, impacting 		performance.
+   	• The work_mem setting of 16MB is used for sorting orders by order_date. If the data size exceeds 16MB, the extra data will spill to the disk, impacting performance.
+  	(size need total ram * 0.25 /100)
   ```
 - maintenance_work_mem
   ```
