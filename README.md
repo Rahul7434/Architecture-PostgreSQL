@@ -69,6 +69,12 @@
             (query execution, table & Index usage, server activity) This data used for performance tuning, Monitoring, and troubleshooting.  
             [Pg_stat_activity, pg_stat_database, pg_stat_stat_usr_tables] :- current state and performance of the DB.
 		        [Pg_stat_all_tables,]:- provides information about table & index usages.
+
+  track_activities :- on /off :- Tracks active SQL quries of all sessions.
+  track_counts :- on/off :- Enables collections of tables and index usage statistics.
+  track_io_timing:-default off :-
+  track_functions : default none:-
+  track_wal_io_timing :- default off
   ```
 
 - Logging Collecter|writter:- 
