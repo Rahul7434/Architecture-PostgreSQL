@@ -28,13 +28,22 @@
     ```
     It flushes regularly modified transaction in to the walfile.
     (flushes the log from wal buffer to disk file if the walbuffer full, Transaction commited, time interval).
+     wal_writer_delay (default 200ms) :- wal wrtier process will wakes up to flush wal buffer to disk based on this value. (lower values).
+     wal_writer_flush_after (defsult 1MB) :- Specific amount of WAL Data must be written before forcing a flush to disk. it helps reduce fsync and improves performance by batching writes.
+    
+     
     ```
 - CheckPointer:- 
     ```
      Ensures all dirty buffers has stored on the disk files and records current state of the database in the wal.
-		 When Checkpoint is completed, the data up to that point is considered safe.
+		 When Checkpoint is completed, the data up to that point is considered safe. 
      Recycling Process will recycle old file once they no longer needed (because they have been safetly Archived or they are beyond the last checkpoint). 
-     checkpointer force to BG writer to write remaining all dirty pages on the disk.	
+     checkpointer force to BG writer to write remaining all dirty pages on the disk.
+
+    Checkpointer wakes up based on "checkpint_timeout" (default 5m) and max_wal_size(default 1GB)
+    checkpoint_completion_target (default 0.5) :- it will try to write all dirty pages in 0.5 time.
+    checkpoint_flush_after:- (default 256kB ) :- Amount of data written before flushing to the disk.
+    checkpoint_warning:-(default 30s) logs a warning if a checkpoint happens before checkpoint timeout. 	
     ```
 - Archiver:- 
    ```
