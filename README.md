@@ -50,8 +50,18 @@
    This Process copies completed WAL segment files from the pg_wal directory.
 	 for recovery purposes or replication.
 		To enable archiving we need to ON “archive_mode” parameter.
-		“archive_command” paramiter specifies the shell command used to copy or move the wal segment file to a location.
+		“archive_command” parameter specifies the shell command used to copy or move the wal segment file to a location. 
 		 When the wal file is completed (it is fully written and closed) the archive process will trigger the “archive_command” to copy the file to the archive location.
+    archive_mode :- on / off to archive wal files from pg_wal directory to another location.
+    archive_command: - 'cp %p /path/archiveidr/%f';
+    archive_timeout :- (default 60s) it will create new wal file even before file is not fully written each 60s.
+    wal_keep_size:- ():-
+    wal_level:- () defines how much information can store in wal based on (minimal, replica, logical) values.
+   	minimal :- only crash recovery. not for replication and PITR. (low wal size fast performance).
+   	replica :- for standby server & PITR. ()
+   	logical :- luse full for ogical replication & PITR.
+   	restore_command:- 
+   
    ```
 - Stat_Collector:- 
   ```
