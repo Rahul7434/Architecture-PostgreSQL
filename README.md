@@ -98,8 +98,8 @@
             -it scans tables if they need to be vacuumed or analyzed. The decision is based on deleted rows(tuples) or Updated age of statistics.
    	autovacuum :-  Enable or disable
    	autovacuum_naptime:- sets the delay between runs.
-   	autovacuum_vacuum_threshold :- (default size 50) This is the minimum number of dead tuples required before autovaccum
-    	autovacuum_analyze_threshold:- Defines thresholds for vacuuming and analyzing tables.
+   	autovacuum_vacuum_threshold :- (default size 50) This is the minimum number of dead tuples required before autovacuum.
+    	autovacuum_analyze_threshold:- (default size 50) Similar vacuum threshold but applies to ANALYZE.
    	autovacuum_vacuum_scale_factor (default 0.2 20%):- This controls when autoivaccum is triggered based on table size.(IT DEFINES percentage of dead tuples that must exist before 			autovacuum runs).
    	autovacuum_analyze_scale_factor:-(default size 0.1 10%)This determines when the ANALYZE runs based on the number of inserted/updated/deleted rows ().
     ```
