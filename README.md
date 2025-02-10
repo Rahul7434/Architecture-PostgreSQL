@@ -96,10 +96,12 @@
    ```
             -Autovacuum Launcher starts the autovacuum Workers to clean up and analyze tables that require maintenance.
             -it scans tables if they need to be vacuumed or analyzed. The decision is based on deleted rows(tuples) or Updated age of statistics.
-            [autovacuum, autovacuum_naptime]:- Enable or disable & sets the delay between runs.
-            [autovacuum_vacuum_threshold & autovacuum_analyze_threshold]:- Defines thresholds for vacuuming and analyzing tables.
-            [autovacuum_vacuum_scale_factor, & autovacuum_analyze_scale_factor]:-
-	          Specifies the scale factors for triggering vacuuming and analyzing based on table size.
+   	autovacuum :-  Enable or disable
+   	autovacuum_naptime:- sets the delay between runs.
+   	autovacuum_vacuum_threshold :- (default size 50) This is the minimum number of dead tuples required before autovaccum
+    	autovacuum_analyze_threshold:- Defines thresholds for vacuuming and analyzing tables.
+   	autovacuum_vacuum_scale_factor (default 0.2 20%):- This controls when autoivaccum is triggered based on table size.(IT DEFINES percentage of dead tuples that must exist before 			autovacuum runs).
+   	autovacuum_analyze_scale_factor:-(default size 0.1 10%)This determines when the ANALYZE runs based on the number of inserted/updated/deleted rows ().
     ```
 - Logical Replication Launcher:- 
   ```
