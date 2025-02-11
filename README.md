@@ -41,14 +41,7 @@
      checkpointer force to BG writer to write remaining all dirty pages on the disk.
 
     Checkpointer wakes up based on "checkpint_timeout" (default 5m) and max_wal_size(default 1GB)
-    checkpoint_completion_target (default 0.5) :- it will try to write all dirty pages in 0.5 time.
-    checkpoint_flush_after:- (default 256kB ) :- Amount of data written before flushing to the disk.
-    checkpoint_warning:-(default 30s) logs a warning if a checkpoint happens before checkpoint timeout.
     --------
-    1. checkpoint_segments
-    ◦ Description: This parameter determines how many WAL (Write-Ahead Logging) segments must be filled before a checkpoint is triggered. Each WAL segment is 16 MB, and the minimum value is 1.
-    	◦ Workflow:
-        ▪ When the number of filled WAL segments reaches this value, PostgreSQL triggers a checkpoint, which forces all dirty pages (modified data pages in memory) to be written to disk. This ensures that the data is consistent and that the database can recover to a known good state in case of a crash.
 	2. checkpoint_timeout
     ◦ Description: This setting specifies the maximum amount of time (from 30 seconds to 1 hour) between automatic checkpoints.
     	◦ Workflow:
