@@ -43,7 +43,24 @@
     Checkpointer wakes up based on "checkpint_timeout" (default 5m) and max_wal_size(default 1GB)
     checkpoint_completion_target (default 0.5) :- it will try to write all dirty pages in 0.5 time.
     checkpoint_flush_after:- (default 256kB ) :- Amount of data written before flushing to the disk.
-    checkpoint_warning:-(default 30s) logs a warning if a checkpoint happens before checkpoint timeout. 	
+    checkpoint_warning:-(default 30s) logs a warning if a checkpoint happens before checkpoint timeout.
+    --------
+    1. checkpoint_segments
+    ◦ Description: This parameter determines how many WAL (Write-Ahead Logging) segments must be filled before a checkpoint is triggered. Each WAL segment is 16 MB, and the minimum value is 1.
+    	◦ Workflow:
+        ▪ When the number of filled WAL segments reaches this value, PostgreSQL triggers a checkpoint, which forces all dirty pages (modified data pages in memory) to be written to disk. This ensures that the data is consistent and that the database can recover to a known good state in case of a crash.
+	2. checkpoint_timeout
+    ◦ Description: This setting specifies the maximum amount of time (from 30 seconds to 1 hour) between automatic checkpoints.
+    	◦ Workflow:
+        ▪ If the time since the last checkpoint exceeds this value, PostgreSQL will initiate a checkpoint, ensuring data is flushed to disk. The checkpoint will occur even if the checkpoint_segments threshold has not been reached, providing a time-based control mechanism.
+	3. checkpoint_completion_target
+    ◦ Description: This parameter indicates the target duration (between 0.0 and 1.0) for completing a checkpoint relative to the checkpoint_timeout.
+    	◦ Workflow:
+        ▪ If set to 0.5, for instance, PostgreSQL will aim to complete the checkpoint in half of the checkpoint_timeout duration. This helps to spread out the I/O load over time instead of performing all writes at once, which can lead to spikes in I/O operations.
+	4. checkpoint_warning
+    ◦ Description: This parameter sets the threshold (in seconds) for how long a checkpoint can take before a warning is logged. The default is 30 seconds. Setting it to 0 disables the warning.
+    	◦ Workflow:
+        ▪ If a checkpoint exceeds the specified duration, PostgreSQL will log a warning in the logs, allowing administrators to monitor long-running checkpoints that may indicate performance issues.	
     ```
 - Archiver:- 
    ```
