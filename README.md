@@ -219,12 +219,16 @@ In PostgreSQL, a query flow for a read operation follows a structured process. H
 ```
 ##### Summary of the PostgreSQL Read Query Flow
 ```
-    8. Client Request: Query is sent to the server.
-    9. Parsing: Syntax check and creation of a parse tree.
-    10. Query Rewrite: Modifications are applied if views or rules are involved.
-    11. Planning/Optimization: Different execution plans are evaluated and the optimal one is selected.
-    12. Execution: Data retrieval through sequential scans, index scans, or joins.
-    13. Buffer Manager/Cache: Data is retrieved from memory or disk.
-    14. Disk I/O: Data is fetched from disk if necessary.
-    15. Results: Data is sent back to the client.
+    1. Client Request: Query is sent to the server.
+    2. Parsing: Syntax check and creation of a parse tree.
+	3. Analysis:-The analyzer receives the parse tree and performs semantic analysis.
+		It verifies that the referenced tables and columns exist, resolves data types, and expands wildcards like * into full column lists.
+		It also attaches metadata to the query, such as command type and clause details.
+		The result is a query tree.
+    4. Query Rewrite: Modifications are applied if views or rules are involved.
+    5. Planning/Optimization: Different execution plans are evaluated and the optimal one is selected.
+    6. Execution: Data retrieval through sequential scans, index scans, or joins.
+    7. Buffer Manager/Cache: Data is retrieved from memory or disk.
+    8. Disk I/O: Data is fetched from disk if necessary.
+    9. Results: Data is sent back to the client.
 ```
