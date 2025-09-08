@@ -2,7 +2,7 @@
 ### Postgres Architecture is divided into Three Parts:- 
   - Background Proces
   - Memory
-  - Data files
+  - Files Component
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### Background Process:- [bg_writer , wal_writer, checkpointer, Archiever, stat_collector, loggin_collector,  autovacuum_launcher, logical_replication_launcher.]
@@ -186,11 +186,38 @@
 	SET maintenance_work_mem = '64MB';  -- Set maintenance_work_mem to 64MB
 	CREATE INDEX idx_order_date ON orders(order_date);  -- Index creation
   ```
-## Files 
+## Files
+```
 - data files:-
-- WAL Files:- 
+  	These store the actual contents of tables, indexes, sequences, etc.
+	Located under the base/ directory inside the PostgreSQL data directory.
+	Each table or index is mapped to a physical file using its relfilenode.
+	Organized by database OID → schema → table → file.
+	-Example: /var/lib/postgresql/data/base/16384/24576	
+	📌 These files are managed by PostgreSQL automatically and should never be manually edited.
+- WAL Files:-
+  	Located in the pg_wal/ directory.
+	Store changes before they’re written to data files — crucial for crash recovery.
+	WAL ensures durability: committed transactions are safe even if the server crashes.
+	WAL segments are typically 16MB in size.
+	Used during replication, PITR (Point-In-Time Recovery), and crash recovery.
+	📌 Controlled by parameters like wal_level, wal_keep_size, and max_wal_size. 
 - Archive Files:-
+  	Archived WAL files copied from pg_wal/ to a safe location.
+	Enabled via archive_mode = on and archive_command.
+	Used for long-term storage, PITR, and replication.
+
+	Example command:
+		archive_command = 'cp %p /mnt/archive/%f'
+	📌 Archiving is essential for backup strategies and disaster recovery.
 - Log Files:-
+  	Store server logs: errors, warnings, connection info, query execution details.
+	Location defined by log_directory and log_filename.
+	Logging is managed by the logging_collector process.
+	Example filename: postgresql-2025-09-08_114500.log
+	📌 Useful for auditing, debugging, and performance monitoring.
+
+```
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ### Query Flow:-
 ```
