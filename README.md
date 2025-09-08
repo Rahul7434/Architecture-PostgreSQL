@@ -1,10 +1,12 @@
  # Architecture-PostgreSQL
 ### Postgres Architecture is divided into Three Parts:- 
-  - Postmaster
   - Background Proces
   - Memory
+  - Data files
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
-#### Postmaster:- 
+
+### Background Process:- [bg_writer , wal_writer, checkpointer, Archiever, stat_collector, loggin_collector,  autovacuum_launcher, logical_replication_launcher.]
+- Postmaster:- 
 ```
   - Postmaster is the main or super Process in Postgresql.
   - Responsible for handling Client connections & Background Processes.
@@ -13,7 +15,6 @@
   - Process checks if the client IP Address, Username, Database, and Password Match will establish a connectio n otherwise it will deny the request. 
   - One Connection is established then Postmaster will Start all Background Processes for each Connection.
 ```
-### Background Process:- [bg_writer , wal_writer, checkpointer, Archiever, stat_collector, loggin_collector,  autovacuum_launcher, logical_replication_launcher.]
 - BG Writer:- 
   ```
   Responsible for the performance of i/o operations. It continuously writes Dirty Pages from shared buffer to the Disk file.
