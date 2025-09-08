@@ -2,7 +2,7 @@
 ### Postgres Architecture is divided into Three Parts:- 
   - Background Proces
   - Memory
-  - Files Component
+  - Files System
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### Background Process:- [bg_writer , wal_writer, checkpointer, Archiever, stat_collector, loggin_collector,  autovacuum_launcher, logical_replication_launcher.]
@@ -207,7 +207,6 @@
   	Archived WAL files copied from pg_wal/ to a safe location.
 	Enabled via archive_mode = on and archive_command.
 	Used for long-term storage, PITR, and replication.
-
 	Example command:
 		archive_command = 'cp %p /mnt/archive/%f'
 	📌 Archiving is essential for backup strategies and disaster recovery.
@@ -217,6 +216,8 @@
 	Logging is managed by the logging_collector process.
 	Example filename: postgresql-2025-09-08_114500.log
 	📌 Useful for auditing, debugging, and performance monitoring.
+	Controlled by:-
+	log_directory, log_filename, log_rotation_age, log_rotation_size
 
 ```
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
