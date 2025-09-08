@@ -1,4 +1,4 @@
- # Architecture-PostgreSQL
+# Architecture-PostgreSQL
 ### Postgres Architecture is divided into Three Parts:- 
   - Background Proces
   - Memory
@@ -186,6 +186,11 @@
 	SET maintenance_work_mem = '64MB';  -- Set maintenance_work_mem to 64MB
 	CREATE INDEX idx_order_date ON orders(order_date);  -- Index creation
   ```
+## Files 
+- data files:-
+- WAL Files:- 
+- Archive Files:-
+- Log Files:-
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ### Query Flow:-
 ```
